@@ -316,7 +316,7 @@ resource "aws_sns_topic" "alarm_email" {
 resource "aws_sns_topic_subscription" "alarm_to_email" {
   topic_arn = aws_sns_topic.alarm_email.arn
   protocol  = "email"
-  endpoint  = "juventinopalandeng@gmail.com"  # Replace with your email
+  endpoint  = "juventinopalandeng@gmail.com"
 }
 
 output "rds_endpoint" {
