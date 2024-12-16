@@ -1,0 +1,55 @@
+---
+- name: Install PHP, Apache2, MySQL, Git clone, image dir config, 
+  hosts: all
+  become: true
+
+  vars:
+    php_packages:
+      - php
+      - php-cli
+      - php-mysql
+      - php-curl
+      - php-xml
+      - php-mbstring
+
+  tasks:
+    - name: Update cache apt
+      apt:
+        update_cache: yes
+
+    - name: Install Apache2
+      apt:
+        name: apache2
+        state: present
+
+    - name: Git clone project ke /var/www/html/perpustakaan 
+      git:
+        repo: 'https://github.com/Groumeaux/perpustakaan.git'  
+        dest: /var/www/html/perpustakaan
+        version: testing2
+        update: yes
+        force: yes
+
+    - name: Memastikan permission folder images
+      file:
+        path: /var/www/html/perpustakaan/images
+        state: directory
+        mode: '0755'
+
+    - name: Mengubah ownership dari folder images menjadi www-data
+      ansible.builtin.file:
+        path: /var/www/html/perpustakaan/images
+        owner: www-data
+        group: www-data
+        recurse: yes
+
+    - name: Install PHP dan modul-modul
+      apt:
+        name: "{{ php_packages }}"
+        state: present
+
+    - name: Install server MySQL 
+      apt:
+        name: mysql-server
+        state: present
+
